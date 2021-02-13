@@ -39,7 +39,7 @@ def new_store():
         return redirect(url_for('main.store_detail', store_id=new_store.id))
 
     # TODO: Send the form to the template and use it to render the form fields
-    return render_template('new_store.html',  store=new_store, form=form)
+    return render_template('new_store.html',  form=form)
 
 @main.route('/new_item', methods=['GET', 'POST'])
 def new_item():
@@ -62,10 +62,7 @@ def new_item():
         db.session.commit()
         flash('New item added')
         return redirect(url_for('main.item_detail', item_id=new_item.id))
-
-
-    # Sends the form to the template and use it to render the form fields
-    return render_template('new_item.html', item=new_item, form=form)
+    return render_template('new_item.html', form=form)
 
 @main.route('/store/<store_id>', methods=['GET', 'POST'])
 def store_detail(store_id):
