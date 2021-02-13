@@ -119,8 +119,10 @@ def item_detail(item_id):
         db.session.add(new_item)
         db.session.commit()
 
+        flash('New item created')
+        return redirect(url_for('main.item_detail', item_id=new_item.id))
 
-    # TODO: Send the form to the template and use it to render the form fields
+    #  Sends the form to the template and use it to render the form fields
     item = GroceryItem.query.get(item_id)
     return render_template('item_detail.html', item=item)
 
