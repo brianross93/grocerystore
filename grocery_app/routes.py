@@ -27,6 +27,7 @@ def new_store():
     # - flash a success message, and
     # - redirect the user to the store detail page.
     if form.validate_on_submit():
+        
         new_store = GroceryStore(
                 title=form.title.data,
                 address=form.address.data,
@@ -39,7 +40,7 @@ def new_store():
         return redirect(url_for('main.store_detail', store_id=new_store.id))
 
     # TODO: Send the form to the template and use it to render the form fields
-    return render_template('new_store.html',  form=form)
+    return render_template('new_store.html', form=form)
 
 @main.route('/new_item', methods=['GET', 'POST'])
 def new_item():
@@ -55,7 +56,8 @@ def new_item():
             name=form.name.data,
             price=form.price.data,
             category=form.category.data,
-            photo_url=form.photo_url.data
+            photo_url=form.photo_url.data,
+            store=form.store.data
 
         )
         db.session.add(new_item)

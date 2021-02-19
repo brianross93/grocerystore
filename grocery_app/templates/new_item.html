@@ -3,7 +3,8 @@
 
 <h1>New Item</h1>
 
-<form>
+<form action="{{url_for('main.new_item')}}" method="POST">
+    {{form.csrf_token}}
     <fieldset>
         <legend>Please enter your information:</legend>
 
@@ -11,8 +12,8 @@
 
         <!-- Removes the next paragraph and use the `form` object passed in 
             from the route to render a form. -->
-        <p><em>
-            {{ form.name.label }}
+        
+            {{ form.name.label}}
             {{ form.name }}
             {{ form.price.label }}
             {{ form.price }}
@@ -23,9 +24,9 @@
             {{ form.store }}
             {{ form.submit }}
 
-        </em></p>
+   
 
-        <input type="submit" value="Submit">
+        
     </fieldset>
 </form>
 
