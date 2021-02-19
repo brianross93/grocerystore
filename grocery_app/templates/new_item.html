@@ -13,20 +13,22 @@
         <!-- Removes the next paragraph and use the `form` object passed in 
             from the route to render a form. -->
         
-            {{ form.name.label}}
+            {{ form.name.label }}
             {{ form.name }}
+
             {{ form.price.label }}
             {{ form.price }}
             
             {{ form.photo_url.label }}
             {{ form.photo_url }}
+
+            {{form.category.label}}
+            {{form.category}}
+
             {{ form.store.label }}
             {{ form.store }}
+
             {{ form.submit }}
-
-   
-
-        
     </fieldset>
 </form>
 

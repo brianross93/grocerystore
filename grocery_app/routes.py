@@ -46,19 +46,20 @@ def new_store():
 def new_item():
     # Creates a GroceryItemForm
     form = GroceryItemForm()
-
+    
     # If form was submitted and was valid:
     # - create a new GroceryItem object and save it to the database,
     # - flash a success message, and
     # - redirect the user to the item detail page.
+    
     if form.validate_on_submit():
+        print("here")
         new_item = GroceryItem(
             name=form.name.data,
             price=form.price.data,
             category=form.category.data,
             photo_url=form.photo_url.data,
             store=form.store.data
-
         )
         db.session.add(new_item)
         db.session.commit()
