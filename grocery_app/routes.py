@@ -175,6 +175,8 @@ def add_to_shopping_list(item_id):
 @main.route('/shopping_list')
 @login_required
 def shopping_list():
-    user = User.query.filter_by(username=form.username.data).first()
+    item = User.query.filter_by(item)
+    print(item)
+    return item
     
 
