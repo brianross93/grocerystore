@@ -1,11 +1,14 @@
 
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from datetime import date, datetime
-from grocery_app.models import GroceryStore, GroceryItem
+from grocery_app.models import GroceryStore, GroceryItem, User
 from grocery_app.forms import GroceryStoreForm, GroceryItemForm
 from grocery_app import app, db
+from wtforms import StringField, DateField, SelectField, SubmitField, FloatField, TextAreaField, SignUpForm, LoginForm
+from flask.ext.bcrypt import Bcrypt
 
 main = Blueprint("main", __name__)
+auth = Blueprint("auth", __name__)
 
 ##########################################
 #           Routes                       #
@@ -17,6 +20,7 @@ def homepage():
     print(all_stores)
     return render_template('home.html', all_stores=all_stores)
 
+@login_required
 @main.route('/new_store', methods=['GET', 'POST'])
 def new_store():
     # TODO: Create a GroceryStoreForm
@@ -42,6 +46,7 @@ def new_store():
     # TODO: Send the form to the template and use it to render the form fields
     return render_template('new_store.html', form=form)
 
+@login_required
 @main.route('/new_item', methods=['GET', 'POST'])
 def new_item():
     # Creates a GroceryItemForm
@@ -53,7 +58,7 @@ def new_item():
     # - redirect the user to the item detail page.
     
     if form.validate_on_submit():
-        print("here")
+        
         new_item = GroceryItem(
             name=form.name.data,
             price=form.price.data,
@@ -119,4 +124,57 @@ def item_detail(item_id):
     #  Sends the form to the template and use it to render the form fields
     item = GroceryItem.query.get(item_id)
     return render_template('item_detail.html', item=item)
+
+
+# sign up form 
+@auth.route('/signup', methods=['GET', 'POST'])
+def signup():
+    print('in signup')
+    form = SignUpForm()
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(
+            username=form.username.data,
+            password=hashed_password
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash('Account Created.')
+        print('created')
+        return redirect(url_for('auth.login'))
+    print(form.errors)
+    return render_template('signup.html', form=form)
+
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=True)
+            next_page = request.args.get('next')
+            return redirect(next_page if next_page else url_for('main.homepage'))
+    return render_template('login.html', form=form)
+
+@login_required
+@auth.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('main.homepage'))
+
+@main.route('/add_to_shopping_list/<item_id>', methods=['POST'])
+def add_to_shopping_list(item_id):
+
+    item = User(
+            item=item_id
+            
+        )
+    db.session.add(item)
+    db.session.commit(item)
+
+@main.route('/shopping_list')
+@login_required
+def shopping_list():
+    user = User.query.filter_by(username=form.username.data).first()
+    
 
